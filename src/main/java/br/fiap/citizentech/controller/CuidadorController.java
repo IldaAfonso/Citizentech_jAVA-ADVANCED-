@@ -84,7 +84,7 @@ public class CuidadorController {
     private EntityModel<CuidadorResponse> comLinks(CuidadorResponse c) {
         return EntityModel.of(c,
                 linkTo(methodOn(CuidadorController.class).buscar(c.id())).withSelfRel(),
-                linkTo(methodOn(CuidadorController.class).idosos(c.id())).withRel("idosos"),
-                linkTo(methodOn(CuidadorController.class).resumo(c.id())).withRel("resumo"));
+                linkTo(CuidadorController.class).slash(c.id()).slash("idosos").withRel("idosos"),
+                linkTo(CuidadorController.class).slash(c.id()).slash("resumo").withRel("resumo"));
     }
 }

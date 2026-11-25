@@ -1,7 +1,7 @@
-# CitizenTech – API "Idoso em casa com mais segurança" (Java Advanced)
+﻿# CitizenTech – API "Idoso em casa com mais segurança" (Java Advanced)
 
-**Integrantes:** Ilda Afonso | RM 568233 | Turma 2TDS
-**Pitch (vídeo ≤ 5 min):** COLE-AQUI-O-LINK-DO-YOUTUBE
+**Integrantes:** Ilda Afonso | RM 568233 | Turma 2TDSPA
+**Pitch (vídeo ≤ 5 min):** 
 
 ## O problema
 Idosos que moram sozinhos ou passam o dia sem companhia sofrem quedas, esquecem remédios e demoram a receber ajuda.
@@ -81,3 +81,5 @@ Regras de negócio: gravidade calculada pelo tipo (botão = CRÍTICA, sem movime
 
 ## Declaração de uso de IA
 Utilizei o Claude (Anthropic) como apoio para estruturar o projeto e gerar código base. Revisei o conteúdo, executei e entendo o funcionamento de cada parte.
+
+

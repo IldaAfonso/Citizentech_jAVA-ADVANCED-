@@ -27,19 +27,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtService jwtService) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())                       // API stateless com JWT: sem sessão, sem CSRF
-            .cors(Customizer.withDefaults())                    // CORS para o app Mobile
-            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(a -> a
-                .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
-                        "/actuator/health/**", "/actuator/info").permitAll()
-                .requestMatchers("/actuator/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")   // só ADMIN exclui
-                .anyRequest().authenticated())
-            .exceptionHandling(e -> e.authenticationEntryPoint((req, res, ex) ->
-                res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token ausente ou inválido")))
-            .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf.disable())                       // API stateless com JWT: sem sessão, sem CSRF
+                .cors(Customizer.withDefaults())                    // CORS para o app Mobile
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(a -> a
+                        .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
+                                "/actuator/health/**", "/actuator/info", "/error").permitAll()
+                        .requestMatchers("/actuator/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")   // só ADMIN exclui
+                        .anyRequest().authenticated())
+                .exceptionHandling(e -> e
+                        .authenticationEntryPoint((req, res, ex) -> escreverErro(res, 401, "Unauthorized", "Token ausente ou inválido."))
+                        .accessDeniedHandler((req, res, ex) -> escreverErro(res, 403, "Forbidden", "Sem permissão para esta operação.")))
+                .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    private static void escreverErro(HttpServletResponse res, int status, String erro, String mensagem) throws java.io.IOException {
+        res.setStatus(status);
+        res.setContentType("application/json;charset=UTF-8");
+        res.getWriter().write("{\"status\":" + status + ",\"erro\":\"" + erro + "\",\"mensagem\":\"" + mensagem + "\",\"detalhes\":[]}");
     }
 
     @Bean
